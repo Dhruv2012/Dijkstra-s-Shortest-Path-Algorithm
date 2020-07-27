@@ -2,16 +2,22 @@
 #include <bits/stdc++.h>
 #pragma once
 
-class Dijkstra{
-    int N,src;          /// No of nodes,Source in the Algorithm.
-    int **graph;       /// Input graph
+typedef std::pair<int, int> ipair; 
 
+
+class Dijkstra{
+    int N,src,max_dist;          /// No of nodes, Source node in the Algorithm, Max distance between 2 nodes
+    int **graph;                 /// Input graph
+    std::vector <ipair> *adj;    /// A vector storing neighbouring vertices and weight/edges pair 
+    std::vector<bool> visited;   /// A vector for storing information of visited vertices.
+    std::vector<int> parent;     /// A vector for storing parent node for each node. For Path tracing.
     public:        
         std::vector<int> distance;     ///distance array wrt source to all nodes in the graph.
         
-        Dijkstra(int source,int no_of_nodes);
+        Dijkstra(int source,int no_of_nodes,int max_distance);
 
-        /** \brief Initializes distance array wrto source. Hence, Distance at source index is 0 and with the other indices is infinity(For convenience its set to -1 here). 
+        /** \brief Initializes distance array wrto source. 
+        *   Hence, Distance at source index is 0 and with the other indices is infinity/max_distance(Max value in input 2D array). 
          * \param[in] source index
          */
         void init_distance();
@@ -21,23 +27,11 @@ class Dijkstra{
         /** \brief Sets input 2D array as graph for the algorithm
          * \param[in] 2D array
          */
-        void setInput(int **input){
-            int* temp;
-            graph = (int** )malloc(N * sizeof(*graph));
-            temp = (int* )malloc(N  * N * sizeof(graph[0]));
-            for (int i = 0; i < N; i++) {
-                graph[i] = temp + (i * N);
-            }
+        void setInput(int *input);
 
-            std::cout << "N: " << N << std::endl;
-            std::cout << sizeof(input)/sizeof(input[0]) << std::endl;
-            for(int i = 0; i < N;i++){
-                for(int j = 0; j <N;j++)
-                       //graph[i][j] = input[i][j];                     
-                       std::cout << input[i][j] << " ";
-            }
-           
-        }
+        /** \brief Runs Dijkstras algo
+         */
+        void run();
 
         void setSource(int source){
             src = source;
@@ -46,8 +40,21 @@ class Dijkstra{
         int getSource(){
             return src;
         }
+        
+        /** \brief Traces path for specifed node
+        *  \param[in] Input node for which path is to be traced
+        */
+        void TracePath(int j){
+            if(parent[j]==-1){
+                std::cout << j;
+                return;
+            }
+            TracePath(parent[j]);
+            std::cout << "-" << j;
+        }
 
         void printInputGraph(){
+            std::cout << "The input Graph is: " <<std::endl;
             for(int i=0;i<N;i++){
                 for(int j=0;j<N;j++){
                     std::cout << graph[i][j] << " ";
@@ -55,5 +62,27 @@ class Dijkstra{
                 std::cout << std::endl;
             }
         }
+
+        /** \brief Returns distance information of all nodes from source
+        */          
+        std::vector<int> getDistanceArray(){
+            return distance;
+        }
         
+        void printDistanceArray(){
+            std::cout << std::endl;
+            std::cout << "The Distance of all nodes from source is: " <<std::endl;
+            for(int i=0;i<distance.size();i++){
+                std::cout << distance[i] << " ";
+            }
+            std::cout << std::endl;
+        }
+
+        void printParentArray(){
+            std::cout << "The Parent array obtained is: " <<std::endl;
+            for(int i=0;i<parent.size();i++){
+                std::cout << parent[i] << " ";
+            }
+            std::cout << std::endl;
+        }
 };
