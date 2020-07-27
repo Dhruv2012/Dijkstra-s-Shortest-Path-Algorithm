@@ -1,5 +1,5 @@
 #include <iostream>
-#include "dijkstras.h"
+#include "include/dijkstras.h"
 
 
 // If 2 nodes are not neighbours set the distances between them to this in the input 2D Graph
